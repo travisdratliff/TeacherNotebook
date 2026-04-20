@@ -55,6 +55,15 @@ enum Importer {
             course.seats.append(Seat(id: student.id, firstName: student.firstName, lastName: student.lastName))
         }
     }
+<<<<<<< HEAD
     static func importAssignments(from url: URL) -> [Assignment] { return [] }
     static func importLessonsLessons(from url: URL) -> [Lesson] { return [] }
+=======
+    static func importAssignments(from url: URL) -> [Assignment] {
+        return []
+    }
+    static func importLessonsLessons(from url: URL) -> [Lesson] {
+        return []
+    }
+>>>>>>> bff29d8bf5549a352338a6adbb20613857e27695
 }

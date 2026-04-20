@@ -67,3 +67,14 @@ extension View {
         self.modifier(PlusButtonModifier(scheme: scheme))
     }
 }
+<<<<<<< HEAD
+=======
+
+extension Date {
+    func yyyyDDmm() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: self)
+    }
+}
+>>>>>>> bff29d8bf5549a352338a6adbb20613857e27695

@@ -10,6 +10,7 @@ import SwiftData
 
 @main
 struct TeacherNotebook2App: App {
+<<<<<<< HEAD
     @State var isActive = false
     var body: some Scene {
         WindowGroup {
@@ -29,6 +30,11 @@ struct TeacherNotebook2App: App {
                     self.isActive = true
                 }
             }
+=======
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+>>>>>>> bff29d8bf5549a352338a6adbb20613857e27695
         }
         .modelContainer(for: [Lesson.self, Course.self, Assignment.self, Desk.self, Documentation.self, Event.self, Grade.self, GradingWeight.self, GradingPeriod.self, Seat.self, Student.self, Note.self, LessonTemplate.self, LessonTextField.self, LessonDropDown.self])
     }
