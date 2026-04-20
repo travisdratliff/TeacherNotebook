@@ -23,18 +23,3 @@ enum SwiftDataManager {
     }
 }
 
-extension String {
-    func trimmed() -> String {
-        return self.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-}
-
-extension ModelContext {
-    func safeSave() {
-        do {
-            try save()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-}

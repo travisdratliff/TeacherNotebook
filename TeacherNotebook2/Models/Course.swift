@@ -20,10 +20,7 @@ class Course {
     @Relationship(deleteRule: .cascade) var notes: [Note] = []
     @Relationship(deleteRule: .cascade) var lessons: [Lesson] = []
     @Relationship(deleteRule: .cascade) var templates: [LessonTemplate] = []
-<<<<<<< HEAD
     var passingGrade = 0.0
-=======
->>>>>>> bff29d8bf5549a352338a6adbb20613857e27695
     init(id: UUID = UUID(), title: String, period: Int, metrics: [Metric]) {
         self.id = id
         self.title = title

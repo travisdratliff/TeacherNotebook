@@ -46,13 +46,7 @@ final class CalendarMaker {
         return formatter
     }()
     func fetchHolidays() async throws -> [Holiday] {
-<<<<<<< HEAD
         guard let url = URL(string: "https://date.nager.at/api/v3/PublicHolidays/\(year)/\(location)") else { return [] }
-=======
-        guard let url = URL(string: "https://date.nager.at/api/v3/PublicHolidays/\(year)/\(location)") else {
-            return []
-        }
->>>>>>> bff29d8bf5549a352338a6adbb20613857e27695
         let (data, _) = try await URLSession.shared.data(from: url)
         return try JSONDecoder().decode([Holiday].self, from: data)
     }

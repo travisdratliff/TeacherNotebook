@@ -26,16 +26,6 @@ extension Double {
     }
 }
 
-extension ModelContext {
-    func safeSave() {
-        do {
-            try save()
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
-}
-
 extension Date {
     func yyyyDDmm() -> String {
         let formatter = DateFormatter()
