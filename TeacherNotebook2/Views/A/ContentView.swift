@@ -74,7 +74,7 @@ struct ContentView: View {
                                     Button {
                                         path.append(Route.dateCell(day: day))
                                     } label: {
-                                        CalendarCellView(day: day, holidays: calendarMaker.holidayCache[calendarMaker.year] ?? [])
+                                        CalendarCellView(day: day, holidays: calendarMaker.holidayCache[calendarMaker.year] ?? [], ninjaHolidays: calendarMaker.ninjaHolidayCache[calendarMaker.year] ?? [])
                                             .matchedTransitionSource(id: day.id, in: zoomCell)
                                     }
                                 }

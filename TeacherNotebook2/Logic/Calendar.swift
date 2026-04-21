@@ -12,6 +12,7 @@ import Observation
 @MainActor
 final class CalendarMaker {
     var holidayCache: [Int: [Holiday]] = [:]
+    var ninjaHolidayCache: [Int: [NinjaHoliday]] = [:]
     var currentDate = Date()
     let location = Locale.current.region?.identifier ?? "US"
     let shortDays = Calendar.current.shortWeekdaySymbols
@@ -53,20 +54,18 @@ final class CalendarMaker {
     func cacheHolidays() async {
         guard holidayCache[year] == nil else { return }
         holidayCache[year] = try? await fetchHolidays()
-//        do {
-//            holidayCache[year] = try await fetchHolidays()
-//        } catch {
-//            print("Holiday fetch failed:", error.localizedDescription)
-//        }
     }
-    func fetchFromNinja() async throws {
-        let url = URL(string: "https://api.api-ninjas.com/v1/publicholidays?country=US&year=2025")!
+    func fetchFromNinja() async throws -> [NinjaHoliday] {
+        guard let url = URL(string: "https://api.api-ninjas.com/v1/publicholidays?country=\(location)&year=\(year)") else { return [] }
         var request = URLRequest(url: url)
-        request.setValue("YOUR_API_KEY", forHTTPHeaderField: "X-Api-Key")
-        let task = URLSession.shared.dataTask(with: request) {(data, response, error) in
-            guard let data = data else { return }
-            print(String(data: data, encoding: .utf8)!)
-        }
-        task.resume()
+        request.httpMethod = "GET"
+        request.setValue("spByq4O06U27B9Bhyc1mVDrOqnupPGD0dTnxSvjP", forHTTPHeaderField: "X-Api-Key")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { throw URLError(.badServerResponse) }
+        return try JSONDecoder().decode([NinjaHoliday].self, from: data)
+    }
+    func cacheNinjaHolidays() async {
+        guard ninjaHolidayCache[year] == nil else { return }
+        ninjaHolidayCache[year] = try? await fetchFromNinja()
     }
 }

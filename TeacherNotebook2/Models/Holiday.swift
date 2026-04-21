@@ -12,6 +12,12 @@ struct Holiday: Codable, Hashable {
     let localName: String
 }
 
-struct GraphQLHoliday: Codable, Hashable {
-    
+struct NinjaHoliday: Codable, Hashable {
+    let name: String
+    let local_name: String
+    let date: String
+    let country: String
+    let year: String
+    let regions: [String]?
+    let federal: Bool
 }

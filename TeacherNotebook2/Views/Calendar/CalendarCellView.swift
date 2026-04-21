@@ -20,6 +20,7 @@ struct CalendarCellView: View {
     }
     let day: Day
     var holidays: [Holiday]
+    var ninjaHolidays: [NinjaHoliday]
     var body: some View {
         ZStack {
             Circle()
@@ -29,7 +30,13 @@ struct CalendarCellView: View {
                 .font(.footnote)
                 .foregroundStyle(.primary)
                 .frame(height: 40)
-            if holidays.contains(where: { $0.date == day.dateMatch }) {
+//            if holidays.contains(where: { $0.date == day.dateMatch }) {
+//                Circle()
+//                    .fill(Color(red: 1.0, green: 0.41, blue: 0.38))
+//                    .frame(height: 8)
+//                    .offset(x: 10, y: -10)
+//            }
+            if ninjaHolidays.contains(where: { $0.date == day.dateMatch }) {
                 Circle()
                     .fill(Color(red: 1.0, green: 0.41, blue: 0.38))
                     .frame(height: 8)
