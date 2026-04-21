@@ -52,11 +52,21 @@ final class CalendarMaker {
     }
     func cacheHolidays() async {
         guard holidayCache[year] == nil else { return }
-        do {
-            holidayCache[year] = try await fetchHolidays()
-            print(year)
-        } catch {
-            print("Holiday fetch failed:", error.localizedDescription)
+        holidayCache[year] = try? await fetchHolidays()
+//        do {
+//            holidayCache[year] = try await fetchHolidays()
+//        } catch {
+//            print("Holiday fetch failed:", error.localizedDescription)
+//        }
+    }
+    func fetchFromNinja() async throws {
+        let url = URL(string: "https://api.api-ninjas.com/v1/publicholidays?country=US&year=2025")!
+        var request = URLRequest(url: url)
+        request.setValue("YOUR_API_KEY", forHTTPHeaderField: "X-Api-Key")
+        let task = URLSession.shared.dataTask(with: request) {(data, response, error) in
+            guard let data = data else { return }
+            print(String(data: data, encoding: .utf8)!)
         }
+        task.resume()
     }
 }

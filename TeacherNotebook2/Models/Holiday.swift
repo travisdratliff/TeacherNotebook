@@ -12,4 +12,6 @@ struct Holiday: Codable, Hashable {
     let localName: String
 }
 
-
+struct GraphQLHoliday: Codable, Hashable {
+    
+}
