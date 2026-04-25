@@ -10,11 +10,15 @@ import SwiftData
 import MapKit
 
 struct NewEventView: View {
+    //
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
     @Environment(\.colorScheme) var scheme
+    //
     @State var title = ""
     @State var position = MapCameraPosition.userLocation(fallback: .automatic)
+    @State var query = ""
+    @State var searchedCoordinate: CLLocationCoordinate2D? = nil
     @State var description = ""
     @State var startDate = Date.now
     @State var endDate = Date.now
@@ -24,6 +28,7 @@ struct NewEventView: View {
     @State var hourBeforeIsOn = false
     @State var mapSearch = ""
     @State var searchResults = [MKMapItem]()
+    //
     var body: some View {
         NavigationStack {
             List {
@@ -34,9 +39,19 @@ struct NewEventView: View {
                         .datePickerStyle(.automatic)
                 }
                 Section {
+                    TextField("Search", text: $query)
+                        .listRowSeparator(.hidden)
+                        .onSubmit {
+                            Task {
+                                await searchLocation(query: query)
+                            }
+                        }
                     GeometryReader { geo in
                         Map(position: $position) {
                             UserAnnotation()
+                            if let coord = searchedCoordinate {
+                                Marker(query, coordinate: coord)
+                            }
                         }
                         .mapControls {
                             MapUserLocationButton()
@@ -88,6 +103,20 @@ struct NewEventView: View {
             .onAppear {
                 CLLocationManager().requestWhenInUseAuthorization()
             }
+        }
+    }
+    func searchLocation(query: String) async {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = query
+        let search = MKLocalSearch(request: request)
+        guard let response = try? await search.start() else { return }
+        if let first = response.mapItems.first {
+            let coord = first.location.coordinate
+            searchedCoordinate = coord
+            position = .region(MKCoordinateRegion(
+                center: coord,
+                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            ))
         }
     }
 }
