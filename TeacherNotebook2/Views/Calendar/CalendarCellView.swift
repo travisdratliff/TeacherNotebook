@@ -20,7 +20,6 @@ struct CalendarCellView: View {
     }
     let day: Day
     var holidays: [Holiday]
-    var ninjaHolidays: [NinjaHoliday]
     var body: some View {
         ZStack {
             Circle()
