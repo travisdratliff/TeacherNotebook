@@ -149,7 +149,7 @@ struct ContentView: View {
                     Menu {
                         Button("New Class") { activeSheet = .newCourse }
                         Button("New Event") { activeSheet = .newEvent }
-                        Button("New Field Trip") { }
+                        Button("New Field Trip") { activeSheet = .newFieldTrip }
                         Divider()
                         Button("Calendar Settings") { activeSheet = .calendarSettings }
                         Button("Teacher Settings") { activeSheet = .teacherSettings}
@@ -160,14 +160,11 @@ struct ContentView: View {
             }
             .sheet(item: $activeSheet) { sheet in
                 switch sheet {
-                    case .teacherSettings:
-                        TeacherSettingsView()
-                    case .calendarSettings:
-                        CalendarSettingsView()
-                    case .newEvent:
-                        NewEventView()
-                    case .newCourse:
-                        NewCourseView()
+                    case .teacherSettings: TeacherSettingsView()
+                    case .calendarSettings: CalendarSettingsView()
+                    case .newEvent: NewEventView()
+                    case .newCourse: NewCourseView()
+                    case .newFieldTrip: NewFieldTripView()
                 }
             }
             .sheet(isPresented: $showOnboarding) {

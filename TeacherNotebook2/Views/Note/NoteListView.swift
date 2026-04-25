@@ -22,6 +22,7 @@ struct NoteListView: View {
                             .foregroundStyle(.secondary)
                             .truncationMode(.tail)
                             .lineLimit(1)
+                        Spacer()
                         Image(systemName: "chevron.right")
                     }
                 }

@@ -11,4 +11,5 @@ enum ContentViewActiveSheet: Identifiable {
     case newEvent
     case teacherSettings
     case calendarSettings
+    case newFieldTrip
 }
