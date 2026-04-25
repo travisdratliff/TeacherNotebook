@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NoteListView: View {
     @Binding var path: NavigationPath
-    var course: Course
+    @Bindable var course: Course
     var body: some View {
         List {
             ForEach(course.notes) { note in

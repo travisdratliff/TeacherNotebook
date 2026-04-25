@@ -19,4 +19,5 @@ enum Route: Hashable {
     case dataView(course: Course)
     case studentGrade(student: Student, course: Course)
     case lessonDetail(course: Course, lesson: Lesson)
+    case documentation(course: Course)
 }

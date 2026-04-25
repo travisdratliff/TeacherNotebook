@@ -142,6 +142,8 @@ struct ContentView: View {
                         StudentGradesView(path: $path, student: student, course: course)
                     case .lessonDetail(let course, let lesson):
                         LessonDetailView(path: $path, course: course, lesson: lesson)
+                    case .documentation(let course):
+                        DocumentationView(course: course, path: $path)
                 }
             }
             .toolbar {

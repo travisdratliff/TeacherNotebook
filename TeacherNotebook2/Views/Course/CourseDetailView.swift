@@ -55,20 +55,10 @@ struct CourseDetailView: View {
                     }
                 }
                 Button {
-                    path.append(Route.noteList(course: course))
+                    path.append(Route.documentation(course: course))
                 } label: {
                     HStack {
-                        Text("Notes")
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .fontWeight(.thin)
-                    }
-                }
-                Button {
-                    
-                } label: {
-                    HStack {
-                        Text("Call Logs")
+                        Text("Documentation")
                         Spacer()
                         Image(systemName: "chevron.right")
                             .fontWeight(.thin)

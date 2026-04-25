@@ -46,6 +46,8 @@ struct AssignmentListView: View {
                     }
                 }
                 .pickerStyle(.segmented)
+            }
+            Section {
                 ForEach(filteredAssignments, id: \.id) { assignment in
                     Button {
                         path.append(Route.assignmentDetail(assignment: assignment))
