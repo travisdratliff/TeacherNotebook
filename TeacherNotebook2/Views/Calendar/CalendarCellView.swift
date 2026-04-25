@@ -22,31 +22,37 @@ struct CalendarCellView: View {
     var holidays: [Holiday]
     var body: some View {
         ZStack {
-            Circle()
+            RoundedRectangle(cornerRadius: 10)
+                .tint(Color.clear)
                 .frame(height: 40)
-                .tint(isDay ? AnyShapeStyle(LinearGradient(gradient: Gradient(colors: [Color(red: scheme == .dark ? 0.71 : 1, green: scheme == .dark ? 0.55 : 0.8, blue: scheme == .dark ? 0.82 : 0.68), Color(red: scheme == .dark ? 0.58 : 1, green: scheme == .dark ? 0.39 : 0.6, blue: scheme == .dark ? 0.73 : 0.59)]), startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Color.clear))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(isDay ? AnyShapeStyle(LinearGradient(gradient: Gradient(colors: [Color(red: scheme == .dark ? 0.71 : 1, green: scheme == .dark ? 0.55 : 0.8, blue: scheme == .dark ? 0.82 : 0.68), Color(red: scheme == .dark ? 0.58 : 1, green: scheme == .dark ? 0.39 : 0.6, blue: scheme == .dark ? 0.73 : 0.59)]), startPoint: .top, endPoint: .bottom)) : AnyShapeStyle(Color.clear), lineWidth: 2)
+                }
             Text("\(day.day)")
-                .font(.footnote)
+                .font(.caption)
                 .foregroundStyle(.primary)
                 .frame(height: 40)
-            if holidays.contains(where: { $0.date == day.dateMatch }) {
-                Circle()
-                    .fill(Color(red: 1.0, green: 0.41, blue: 0.38))
-                    .frame(height: 8)
-                    .offset(x: 10, y: -10)
+            HStack(spacing: 0) {
+                Spacer()
+                if holidays.contains(where: { $0.date == day.dateMatch }) {
+                    Circle()
+                        .fill(Color(red: 1.0, green: 0.41, blue: 0.38))
+                        .frame(width: 7.5, height: 7.5)
+                }
+                if events.contains(where: { $0.dateString == day.dateMatch }) {
+                    Circle()
+                        .fill(Color(red: 0.70, green: 0.62, blue: 0.71))
+                        .frame(width: 7.5, height: 7.5)
+                }
+                if courses.flatMap(\.assignments).contains(where: { $0.dueDate.yyyyDDmm() == day.dateMatch }) {
+                    Circle()
+                        .fill(Color(red: 0.68, green: 0.85, blue: 0.90))
+                        .frame(width: 7.5, height: 7.5)
+                }
             }
-            if events.contains(where: { $0.dateString == day.dateMatch }) {
-                Circle()
-                    .fill(Color(red: 0.70, green: 0.62, blue: 0.71))
-                    .frame(height: 8)
-                    .offset(x: -10, y: -10)
-            }
-            if courses.flatMap(\.assignments).contains(where: { $0.dueDate.yyyyDDmm() == day.dateMatch }) {
-                Circle()
-                    .fill(Color(red: 0.99, green: 0.99, blue: 0.59))
-                    .frame(height: 8)
-                    .offset(x: -10, y: 10)
-            }
+            .frame(width: 30)
+            .offset(x: 0, y: -12)
         }
     }
 }
