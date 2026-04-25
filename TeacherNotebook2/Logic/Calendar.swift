@@ -12,7 +12,6 @@ import Observation
 @MainActor
 final class CalendarMaker {
     var holidayCache: [Int: [Holiday]] = [:]
-    var ninjaHolidayCache: [Int: [NinjaHoliday]] = [:]
     var currentDate = Date()
     let location = Locale.current.region?.identifier ?? "US"
     let shortDays = Calendar.current.shortWeekdaySymbols
@@ -54,18 +53,5 @@ final class CalendarMaker {
     func cacheHolidays() async {
         guard holidayCache[year] == nil else { return }
         holidayCache[year] = try? await fetchHolidays()
-    }
-    func fetchFromNinja() async throws -> [NinjaHoliday] {
-        guard let url = URL(string: "https://api.api-ninjas.com/v1/publicholidays?country=\(location)&year=\(year)") else { return [] }
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("spByq4O06U27B9Bhyc1mVDrOqnupPGD0dTnxSvjP", forHTTPHeaderField: "X-Api-Key")
-        let (data, response) = try await URLSession.shared.data(for: request)
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { throw URLError(.badServerResponse) }
-        return try JSONDecoder().decode([NinjaHoliday].self, from: data)
-    }
-    func cacheNinjaHolidays() async {
-        guard ninjaHolidayCache[year] == nil else { return }
-        ninjaHolidayCache[year] = try? await fetchFromNinja()
     }
 }
