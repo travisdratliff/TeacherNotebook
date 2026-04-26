@@ -50,7 +50,15 @@ struct NewEventView: View {
                         Map(position: $position) {
                             UserAnnotation()
                             if let coord = searchedCoordinate {
-                                Marker(query, coordinate: coord)
+                                Annotation(query, coordinate: coord) {
+                                    Button {
+                                       print(coord)
+                                    } label: {
+                                        Image(systemName: "mappin.circle.fill")
+                                            .foregroundStyle(.red)
+                                            .font(.title)
+                                    }
+                                }
                             }
                         }
                         .mapControls {
