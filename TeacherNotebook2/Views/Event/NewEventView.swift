@@ -52,6 +52,7 @@ struct NewEventView: View {
                             if let coord = searchedCoordinate {
                                 Annotation(query, coordinate: coord) {
                                     Button {
+                                        // save longitude and latitude to Event
                                        print(coord)
                                     } label: {
                                         Image(systemName: "mappin.circle.fill")
