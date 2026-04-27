@@ -37,6 +37,7 @@ struct CellDetailView: View {
                             if event.extendDescription {
                                 VStack(alignment: .leading) {
                                     Text(event.startDate, format: .dateTime)
+                                        .padding(.top)
                                     if let details = event.details {
                                         Divider()
                                         Text(details)
@@ -111,7 +112,9 @@ struct CellDetailView: View {
             }
         }
         .onDisappear {
-            
+            for event in events {
+                event.extendDescription = false
+            }
         }
     }
     
