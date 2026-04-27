@@ -22,7 +22,7 @@ struct CellDetailView: View {
             Section {
                 ForEach(events) { event in
                     if day.dateMatch == event.dateString {
-                        VStack {
+                        VStack(alignment: .leading) {
                             HStack {
                                 Text(event.title)
                                     .fontWeight(event.extendDescription ? .bold : .regular)
@@ -109,7 +109,6 @@ struct CellDetailView: View {
             }
         }
     }
-    
 }
 
 //#Preview {

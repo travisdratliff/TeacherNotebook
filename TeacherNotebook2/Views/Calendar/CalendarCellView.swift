@@ -29,21 +29,21 @@ struct CalendarCellView: View {
                 .font(.caption)
                 .foregroundStyle(.primary)
                 .frame(height: 40)
-            HStack(spacing: 2) {
+            HStack(spacing: 0) {
                 if holidays.contains(where: { $0.date == day.dateMatch }) {
-                    Circle()
-                        .fill(Color(red: 1.0, green: 0.41, blue: 0.38))
-                        .frame(width: 7.5, height: 7.5)
+                    Image(systemName: "sparkle")
+                        .foregroundStyle(.red)
+                        .font(.system(size: 10))
                 }
                 if events.contains(where: { $0.dateString == day.dateMatch }) {
-                    Circle()
-                        .fill(Color(red: 0.70, green: 0.62, blue: 0.71))
-                        .frame(width: 7.5, height: 7.5)
+                    Image(systemName: "calendar")
+                        .foregroundStyle(.red)
+                        .font(.system(size: 10))
                 }
                 if courses.flatMap(\.assignments).contains(where: { $0.dueDate.yyyyDDmm() == day.dateMatch }) {
-                    Circle()
-                        .fill(Color(red: 0.68, green: 0.85, blue: 0.90))
-                        .frame(width: 7.5, height: 7.5)
+                    Image(systemName: "pencil.tip.crop.circle")
+                        .foregroundStyle(.red)
+                        .font(.system(size: 10))
                 }
             }
             .frame(width: 30)
