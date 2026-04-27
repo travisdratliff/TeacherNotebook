@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import MapKit
+import CoreLocation
 
 struct NewEventView: View {
     //
@@ -52,10 +53,13 @@ struct NewEventView: View {
                             if let coord = searchedCoordinate {
                                 Annotation(query, coordinate: coord) {
                                     Button {
-                                        // save longitude and latitude to Event
-                                       print(coord)
+                                        // fix this, currently only gives zip code
+                                        let location = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+                                        Task {
+                                            await getAddress(coordinate: location)
+                                        }
                                     } label: {
-                                        Image(systemName: "mappin.circle.fill")
+                                        Image(systemName: "plus.circle")
                                             .foregroundStyle(.red)
                                             .font(.title)
                                     }
@@ -69,6 +73,7 @@ struct NewEventView: View {
                     }
                     .aspectRatio(1.0, contentMode: .fit)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    Text(searchResults.first?.name ?? "")
                 }
                 Section {
                     Toggle(
@@ -126,6 +131,15 @@ struct NewEventView: View {
                 center: coord,
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
             ))
+        }
+    }
+    // fix to give real address, not zipcode
+    func getAddress(coordinate: CLLocation) async {
+        if let request = MKReverseGeocodingRequest(location: coordinate) {
+            let mapItems = try? await request.mapItems
+            if let mapItem = mapItems?.first {
+                searchResults.append(mapItem)
+            }
         }
     }
 }

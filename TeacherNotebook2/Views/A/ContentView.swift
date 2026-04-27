@@ -50,7 +50,7 @@ struct ContentView: View {
                         .padding()
                         .font(.headline)
                         .foregroundStyle(.primary)
-                        .backgroundModifier(scheme: scheme, amount: 50)
+                        .backgroundModifier(scheme: scheme, amount: 15)
                         HStack {
                             ForEach(calendarMaker.shortDays, id: \.self) { day in
                                 Text(day)
