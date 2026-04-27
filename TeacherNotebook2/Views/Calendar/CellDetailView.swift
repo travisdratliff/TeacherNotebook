@@ -19,7 +19,7 @@ struct CellDetailView: View {
     var body: some View {
         List {
             Section {
-                ForEach(events, id: \.dateString) { event in
+                ForEach(events) { event in
                     if day.dateMatch == event.dateString {
                         Text(event.title)
                     }

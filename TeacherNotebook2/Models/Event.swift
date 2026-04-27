@@ -26,17 +26,19 @@ class Event {
     var location: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0)
     }
+    var address: String?
     var dateString: String {
         Event.dateFormatter.string(from: startDate)
     }
-    init(id: UUID = UUID(), title: String, description: String? = nil, startDate: Date, endDate: Date? = nil, latitude: Double? = nil, longitude: Double? = nil) {
+    init(id: UUID = UUID(), title: String, details: String? = nil, startDate: Date, endDate: Date? = nil, latitude: Double? = nil, longitude: Double? = nil, address: String? = nil) {
         self.id = id
         self.title = title
-        self.details = description
+        self.details = details
         self.startDate = startDate
         self.endDate = endDate
         self.latitude = latitude
         self.longitude = longitude
+        self.address = address
     }
 }
 

@@ -28,7 +28,7 @@ struct NewEventView: View {
     @State var dayBeforeIsOn = false
     @State var hourBeforeIsOn = false
     @State var mapSearch = ""
-    @State var searchResults = [MKMapItem]()
+    @State var locationAddress: String? = nil
     //
     var body: some View {
         NavigationStack {
@@ -53,13 +53,12 @@ struct NewEventView: View {
                             if let coord = searchedCoordinate {
                                 Annotation(query, coordinate: coord) {
                                     Button {
-                                        // fix this, currently only gives zip code
-                                        let location = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
                                         Task {
-                                            await getAddress(coordinate: location)
+                                            let location = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
+                                            await locationAddress = getAddress(coordinate: location)
                                         }
                                     } label: {
-                                        Image(systemName: "plus.circle")
+                                        Image(systemName: "plus.circle.fill")
                                             .foregroundStyle(.red)
                                             .font(.title)
                                     }
@@ -73,7 +72,10 @@ struct NewEventView: View {
                     }
                     .aspectRatio(1.0, contentMode: .fit)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    Text(searchResults.first?.name ?? "")
+                    .listRowSeparator(.hidden)
+                    if let locationAddress {
+                        Text(locationAddress)
+                    }
                 }
                 Section {
                     Toggle(
@@ -91,7 +93,7 @@ struct NewEventView: View {
                     HStack {
                         Spacer()
                         Button {
-                            modelContext.insert(Event(title: title, startDate: startDate))
+                            modelContext.insert(makeEvent())
                             try? modelContext.save()
                             dismiss()
                         } label: {
@@ -133,14 +135,25 @@ struct NewEventView: View {
             ))
         }
     }
-    // fix to give real address, not zipcode
-    func getAddress(coordinate: CLLocation) async {
+    func getAddress(coordinate: CLLocation) async -> String {
+        var result = ""
         if let request = MKReverseGeocodingRequest(location: coordinate) {
             let mapItems = try? await request.mapItems
             if let mapItem = mapItems?.first {
-                searchResults.append(mapItem)
+                result = mapItem.address?.fullAddress ?? "No Address Listed"
             }
         }
+        return result
+    }
+    func makeEvent() -> Event {
+        let event  = Event(title: title, startDate: startDate)
+        if let locationAddress {
+            event.address = locationAddress
+        }
+        if !description.trimmed().isEmpty {
+            event.details = description
+        }
+        return event
     }
 }
 
