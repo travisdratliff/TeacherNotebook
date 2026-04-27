@@ -102,14 +102,6 @@ struct CellDetailView: View {
                 }
                 .tint(.primary)
             }
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    //                    showNewEvent.toggle()
-                } label: {
-                    Image(systemName: "calendar.badge.plus")
-                }
-                .tint(.primary)
-            }
         }
         .onDisappear {
             for event in events {
