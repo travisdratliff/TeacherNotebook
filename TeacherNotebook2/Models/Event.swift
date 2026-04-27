@@ -16,6 +16,7 @@ class Event {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
+    var extendDescription = false
     var id = UUID()
     var title: String
     var details: String?
@@ -23,14 +24,13 @@ class Event {
     var endDate: Date?
     var latitude: Double?
     var longitude: Double?
-    var location: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: latitude ?? 0.0, longitude: longitude ?? 0.0)
-    }
     var address: String?
+    var shortAddress: String?
     var dateString: String {
         Event.dateFormatter.string(from: startDate)
     }
-    init(id: UUID = UUID(), title: String, details: String? = nil, startDate: Date, endDate: Date? = nil, latitude: Double? = nil, longitude: Double? = nil, address: String? = nil) {
+    init(extendDescription: Bool = false, id: UUID = UUID(), title: String, details: String? = nil, startDate: Date, endDate: Date? = nil, latitude: Double? = nil, longitude: Double? = nil, address: String? = nil) {
+        self.extendDescription = extendDescription
         self.id = id
         self.title = title
         self.details = details

@@ -29,6 +29,8 @@ struct NewEventView: View {
     @State var hourBeforeIsOn = false
     @State var mapSearch = ""
     @State var locationAddress: String? = nil
+    @State var shortAddress: String? = nil
+    @State var mapItem: MKMapItem? = nil
     //
     var body: some View {
         NavigationStack {
@@ -55,7 +57,8 @@ struct NewEventView: View {
                                     Button {
                                         Task {
                                             let location = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
-                                            await locationAddress = getAddress(coordinate: location)
+                                            await locationAddress = getAddress(coordinate: location).fullAddress
+                                            await shortAddress = getAddress(coordinate: location).shortAddress
                                         }
                                     } label: {
                                         Image(systemName: "plus.circle.fill")
@@ -135,20 +138,24 @@ struct NewEventView: View {
             ))
         }
     }
-    func getAddress(coordinate: CLLocation) async -> String {
-        var result = ""
+    func getAddress(coordinate: CLLocation) async -> (fullAddress: String, shortAddress: String) {
         if let request = MKReverseGeocodingRequest(location: coordinate) {
             let mapItems = try? await request.mapItems
             if let mapItem = mapItems?.first {
-                result = mapItem.address?.fullAddress ?? "No Address Listed"
+                return (mapItem.address?.fullAddress ?? "No Address Listed", mapItem.address?.shortAddress ?? "No Address Listed")
             }
         }
-        return result
+        return ("No Address Listed", "No Address LIsted")
     }
     func makeEvent() -> Event {
         let event  = Event(title: title, startDate: startDate)
-        if let locationAddress {
+        if let searchedCoordinate {
+            event.latitude = searchedCoordinate.latitude
+            event.longitude = searchedCoordinate.longitude
+        }
+        if let locationAddress, let shortAddress {
             event.address = locationAddress
+            event.shortAddress = shortAddress
         }
         if !description.trimmed().isEmpty {
             event.details = description

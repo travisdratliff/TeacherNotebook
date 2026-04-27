@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import MapKit
 
 struct CellDetailView: View {
     @Binding var path: NavigationPath
@@ -21,7 +22,44 @@ struct CellDetailView: View {
             Section {
                 ForEach(events) { event in
                     if day.dateMatch == event.dateString {
-                        Text(event.title)
+                        VStack {
+                            HStack {
+                                Text(event.title)
+                                    .fontWeight(event.extendDescription ? .bold : .regular)
+                                Spacer()
+                                Button {
+                                    event.extendDescription.toggle()
+                                } label: {
+                                    Image(systemName: event.extendDescription ? "chevron.up" : "chevron.down")
+                                }
+                                .buttonStyle(.borderless)
+                            }
+                            if event.extendDescription {
+                                VStack(alignment: .leading) {
+                                    Text(event.startDate, format: .dateTime)
+                                    if let details = event.details {
+                                        Divider()
+                                        Text(details)
+                                    }
+                                    if let address = event.address, let shortAddress = event.shortAddress {
+                                        Divider()
+                                        HStack {
+                                            Text(address)
+                                            Spacer()
+                                            Button {
+                                                if let latitude = event.latitude, let longitude = event.longitude {
+                                                    let mapItem = MKMapItem(location: CLLocation(latitude: latitude, longitude: longitude), address: MKAddress(fullAddress: address, shortAddress: shortAddress))
+                                                    mapItem.openInMaps()
+                                                }
+                                            } label: {
+                                                Image(systemName: "paperplane")
+                                            }
+                                            .buttonStyle(.borderless)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             } header: {
@@ -72,7 +110,11 @@ struct CellDetailView: View {
                 .tint(.primary)
             }
         }
+        .onDisappear {
+            
+        }
     }
+    
 }
 
 //#Preview {
