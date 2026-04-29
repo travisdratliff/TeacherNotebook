@@ -15,12 +15,16 @@ struct NoteView: View {
     @Bindable var note: Note
     var body: some View {
         List {
-            ZStack(alignment: .leading) {
-                Text(note.content)
-                    .opacity(0)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 4)
-                TextEditor(text: $note.content)
+            Section {
+                ZStack(alignment: .leading) {
+                    Text(note.content)
+                        .opacity(0)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 4)
+                    TextEditor(text: $note.content)
+                }
+            } header: {
+                Text(note.type.rawValue)
             }
         }
         .navigationTitle(Text(note.dateWritten, format: .dateTime))

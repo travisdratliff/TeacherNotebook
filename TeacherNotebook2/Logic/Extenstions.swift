@@ -33,3 +33,9 @@ extension Date {
         return formatter.string(from: self)
     }
 }
+
+//extension View {
+//    func createSelf() -> Self {
+//        return self
+//    }
+//}

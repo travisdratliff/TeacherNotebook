@@ -30,7 +30,6 @@ struct NewTemplateView: View {
                     Text("title")
                 }
                 Section {
-        
                         TextField("Text Field Title", text: $textFieldTitle)
                         HStack {
                             TextField("Order In List", text: $textFieldOrder)

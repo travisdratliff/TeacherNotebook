@@ -70,7 +70,7 @@ struct LessonListView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button("New Lesson") {
+                    Button("New Lesson (Agenda)") {
                         createLesson(template: LessonTemplate())
                     }
                     if !course.templates.isEmpty {

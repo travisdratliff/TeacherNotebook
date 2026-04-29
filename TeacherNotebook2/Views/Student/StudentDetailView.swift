@@ -10,6 +10,7 @@ import SwiftData
 import Charts
 
 struct StudentDetailView: View {
+    //
     @Query(sort: \GradingPeriod.startDate) var gradingPeriods: [GradingPeriod]
     @Query(sort: \GradingWeight.percentage) var weights: [GradingWeight]
     //
@@ -21,9 +22,10 @@ struct StudentDetailView: View {
     @Bindable var course: Course
     //
     @State var pickedGradingPeriod: GradingPeriod?
+    @State var pdfURL: URL?
     //
     var body: some View {
-        let studentAverage = calculateAverage(student: student)
+        let studentAverage = DataCalculator.calculateStudentAverage(student: student, course: course)
         let studentAssignments = course.assignments.sorted { $0.dueDate < $1.dueDate }.filter { $0.grades.contains(where: { $0.student == student})}
         List {
             Section {
@@ -61,7 +63,7 @@ struct StudentDetailView: View {
                                     Spacer()
                                     Text(assignment.dueDate, style: .date)
                                     Divider()
-                                    if let score = findGrade(assignment: assignment) {
+                                    if let score = DataCalculator.findStudentGrade(assignment: assignment, student: student) {
                                         Text(String(format: "%.2f", score))
                                             .frame(width: 50)
                                     } else {
@@ -81,7 +83,7 @@ struct StudentDetailView: View {
                     GroupBox("Percent Passing Per Metric") {
                         Chart(course.metrics) { metric in
                             BarMark(
-                                x: .value("Percent Passing", percentPassingMetric(student: student, metric: metric)),
+                                x: .value("Percent Passing", DataCalculator.percentStudentPassingMetric(student: student, metric: metric, course: course)),
                                 y: .value("Metric", metric.title)
                             )
                             .foregroundStyle(
@@ -91,7 +93,7 @@ struct StudentDetailView: View {
                                                )
                             )
                             .annotation(position: .overlay) {
-                                Text("\(String(format: "%.2f", percentPassingMetric(student: student, metric: metric)))%")
+                                Text("\(String(format: "%.2f", DataCalculator.percentStudentPassingMetric(student: student, metric: metric, course: course)))%")
                                     .font(.caption)
                                     .foregroundStyle(.primary)
                             }
@@ -104,7 +106,7 @@ struct StudentDetailView: View {
                     ForEach(course.metrics) { metric in
                         GroupBox("\(metric.title) - timeline") {
                             Chart(studentAssignments.sorted { $0.dueDate < $1.dueDate }) { assignment in
-                                if let grade = findGrade(assignment: assignment), assignment.metric == metric {
+                                if let grade = DataCalculator.findStudentGrade(assignment: assignment, student: student), assignment.metric == metric {
                                     LineMark(
                                         x: .value("", assignment.dueDate),
                                         y: .value(metric.title, grade)
@@ -163,6 +165,7 @@ struct StudentDetailView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button("Student Settings") { }
+//                    ShareLink("Export All Data as PDF", item: pdfURL ?? render(label: student.fullName))
                     Divider()
                     Button("Delete Student", role: .destructive) {
                         deleteStudent(student: student)
@@ -184,47 +187,19 @@ struct StudentDetailView: View {
             }
         }
     }
-    func findGrade(assignment: Assignment) -> Double? {
-        if let index = assignment.grades.firstIndex(where: { $0.student.id == student.id }) {
-            if let filledScore = assignment.grades[index].score {
-                return filledScore
-            }
-        }
-        return nil
-    }
-    func calculateAverage(student: Student) -> (classAverage: Double, percentages: [GradingWeight: [Double]], hasGrades: Bool) {
-        var average = 0.0
-        let studentGrades = course.assignments.flatMap(\.grades).filter { $0.student == student }
-        let percentagesDictionary = studentGrades.reduce(into: [GradingWeight: [Double]]()) { dictionary, grade in
-            if let score = grade.score {
-                dictionary[grade.weight, default: []].append(score)
-            }
-        }
-        let totalWeight = percentagesDictionary.keys.map { $0.percentage }.reduce(0.0, +)
-        guard totalWeight > 0 else { return (0.0, percentagesDictionary, false) }
-        for (weight, grades) in percentagesDictionary {
-            let normalizedWeight = weight.percentage / totalWeight
-            let avg = (grades.reduce(0.0, +) / Double(grades.count)) * normalizedWeight
-            average += avg
-        }
-        return (average, percentagesDictionary, true)
-    }
-    func percentPassingMetric(student: Student, metric: Metric) -> Double {
-        var amountPassing = 0.0
-        var amountGraded = 0.0
-        let assignmentList = course.assignments.filter { $0.metric == metric }.flatMap(\.grades).filter { $0.student == student }
-        for assignment in assignmentList {
-            if assignment.score != nil {
-                amountGraded += 1
-            }
-            if let score = assignment.score {
-                if score >= course.passingGrade {
-                    amountPassing += 1
-                }
-            }
-        }
-        return (amountPassing / amountGraded) * 100
-    }
+//    func render() -> URL {
+//        let renderer = ImageRenderer(content: self)
+//        let url = URL.documentsDirectory.appending(path: "\(course.title)-\(student.fullName)data.pdf")
+//        renderer.render { size, context in
+//            var box = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+//            guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else { return }
+//            pdf.beginPDFPage(nil)
+//            context(pdf)
+//            pdf.endPDFPage()
+//            pdf.closePDF()
+//        }
+//        return url
+//    }
     func deleteStudent(student: Student) {
         modelContext.delete(student)
         for seat in course.seats {

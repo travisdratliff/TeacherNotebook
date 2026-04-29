@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct NoteListView: View {
     @Binding var path: NavigationPath
@@ -52,9 +53,7 @@ struct NoteListView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     Button("New Note") {
-                        let newNote = Note(course: course)
-                        course.notes.append(newNote)
-                        path.append(Route.noteDetail(course: course, note: newNote))
+                        
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")

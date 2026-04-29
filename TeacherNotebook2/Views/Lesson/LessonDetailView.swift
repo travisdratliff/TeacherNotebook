@@ -95,7 +95,7 @@ struct LessonDetailView: View {
         }
         .onAppear {
             if lesson.title.trimmed().isEmpty {
-                lesson.title = "Untitled"
+                lesson.title = ""
             }
             guard pickedMetric == nil else { return }
             pickedMetric = course.metrics.first
