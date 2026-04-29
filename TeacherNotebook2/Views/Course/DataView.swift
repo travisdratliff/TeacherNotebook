@@ -66,6 +66,7 @@ struct DataView: View {
             pdfURL = exportToPDF(renderImage())
         }
     }
+    // produces blank pdf, fix this
     func exportToPDF<V: View>(_ view: V) -> URL? {
         let renderer = ImageRenderer(content: view)
         let url = URL.documentsDirectory.appending(path: "Data\(course.title).pdf")
